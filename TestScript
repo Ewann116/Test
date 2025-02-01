@@ -1,4 +1,4 @@
--- Créer un menu admin compatible avec Solara
+-- Créer un menu admin universel pour tout le monde
 local player = game.Players.LocalPlayer
 
 -- Créer la GUI du menu
@@ -29,46 +29,37 @@ flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
 
+local flying = false
+local bodyVelocity
+
 flyButton.MouseButton1Click:Connect(function()
-    -- Code pour activer le vol
-    print(player.Name .. " activated Fly!")
-    -- Implémente le vol ici (utilisation de BodyVelocity ou autres méthodes)
-end)
+    if not flying then
+        -- Activer le vol
+        print(player.Name .. " activated Fly!")
+        flying = true
 
--- Bouton pour activer la vitesse
-local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0, 280, 0, 50)
-speedButton.Position = UDim2.new(0.5, -140, 0, 150)
-speedButton.Text = "Activate Speed"
-speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
-speedButton.Parent = frame
+        -- Créer un BodyVelocity pour simuler le vol
+        bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(400000, 400000, 400000)  -- Force nécessaire pour voler
+        bodyVelocity.Velocity = Vector3.new(0, 50, 0)  -- Vitesse de vol
+        bodyVelocity.Parent = player.Character.HumanoidRootPart
 
-speedButton.MouseButton1Click:Connect(function()
-    -- Code pour augmenter la vitesse
-    print(player.Name .. " activated Speed!")
-    -- Implémente la vitesse ici (par exemple, augmenter le WalkSpeed)
-end)
-
--- Bouton pour activer GodMode
-local godModeButton = Instance.new("TextButton")
-godModeButton.Size = UDim2.new(0, 280, 0, 50)
-godModeButton.Position = UDim2.new(0.5, -140, 0, 220)
-godModeButton.Text = "Activate GodMode"
-godModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-godModeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-godModeButton.Parent = frame
-
-godModeButton.MouseButton1Click:Connect(function()
-    -- Code pour activer GodMode
-    print(player.Name .. " activated GodMode!")
-    -- Implémente GodMode ici (par exemple, rendre le joueur invincible)
+        -- Maintenir le vol jusqu'à ce que le joueur arrête
+        bodyVelocity.Velocity = Vector3.new(0, 50, 0)
+    else
+        -- Désactiver le vol
+        print(player.Name .. " deactivated Fly!")
+        flying = false
+        if bodyVelocity then
+            bodyVelocity:Destroy()  -- Supprimer le BodyVelocity pour arrêter de voler
+        end
+    end
 end)
 
 -- Bouton pour fermer le menu
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0, 280, 0, 50)
-closeButton.Position = UDim2.new(0.5, -140, 0, 290)
+closeButton.Position = UDim2.new(0.5, -140, 0, 150)
 closeButton.Text = "Close Menu"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
