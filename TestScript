@@ -5,6 +5,7 @@ local char = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = char:WaitForChild("HumanoidRootPart")
 local flying = false
 local speed = 50
+local menuOpen = true -- Initialement, le menu est ouvert
 
 -- Fonction pour activer/désactiver le fly
 local function toggleFly()
@@ -31,19 +32,79 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 200, 0, 100)
-frame.Position = UDim2.new(0.5, -100, 0.5, -50)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-frame.BackgroundTransparency = 0.5
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BackgroundTransparency = 0.8
+frame.BorderSizePixel = 0
 frame.Parent = screenGui
 
+-- Message d'introduction
+local introLabel = Instance.new("TextLabel")
+introLabel.Size = UDim2.new(1, 0, 0.2, 0)
+introLabel.Position = UDim2.new(0, 0, 0, 0)
+introLabel.Text = "Ce script a été créé par Myster78950"
+introLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+introLabel.TextSize = 14
+introLabel.BackgroundTransparency = 1
+introLabel.Parent = frame
+
+-- Création du bouton pour fermer/ouvrir le menu
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 40, 0, 40)
+toggleButton.Position = UDim2.new(1, -40, 0, 0)
+toggleButton.Text = "+"
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+toggleButton.Parent = frame
+
+-- Création du bouton "Fly"
 local flyButton = Instance.new("TextButton")
 flyButton.Size = UDim2.new(0, 180, 0, 40)
-flyButton.Position = UDim2.new(0, 10, 0, 30)
+flyButton.Position = UDim2.new(0, 10, 0, 60)
 flyButton.Text = "Fly"
 flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
+
+-- Fonction pour déplacer le menu
+local dragging = false
+local dragStart
+local startPos
+
+frame.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+frame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+-- Fonction pour ouvrir/fermer le menu
+toggleButton.MouseButton1Click:Connect(function()
+    menuOpen = not menuOpen
+    if menuOpen then
+        frame.Visible = true
+        toggleButton.Text = "-"
+    else
+        frame.Visible = false
+        toggleButton.Text = "+"
+    end
+end)
 
 -- Quand on clique sur le bouton "Fly"
 flyButton.MouseButton1Click:Connect(function()
