@@ -1,75 +1,104 @@
+-- Créer un ScreenGui pour afficher le menu
 local player = game.Players.LocalPlayer
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player.PlayerGui
 
--- Main menu frame (adjusted color and transparency)
+-- Créer la frame principale du menu
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 400, 0, 300)
-frame.Position = UDim2.new(0.5, -200, 0.5, -150)
-frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)  -- Darker grey background
-frame.BackgroundTransparency = 0.2  -- Slightly transparent
+frame.Size = UDim2.new(0, 250, 0, 400)
+frame.Position = UDim2.new(0.5, -125, 0.5, -200)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.Parent = screenGui
 
--- Menu label
-local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, 0, 0, 40)
-label.Text = "Mega Cheat Menu"
-label.TextColor3 = Color3.fromRGB(255, 255, 255)
-label.TextSize = 20
-label.BackgroundTransparency = 1
-label.Parent = frame
+-- Titre du menu
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 40)
+titleLabel.Text = "Mega Cheat by Myster78950"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextSize = 18
+titleLabel.TextAlignment = Enum.TextAlignment.Center
+titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+titleLabel.Parent = frame
 
--- Fly Button (adjusted size, color, and position)
+-- Créer un bouton Fly
 local flyButton = Instance.new("TextButton")
-flyButton.Size = UDim2.new(0, 200, 0, 40)
-flyButton.Position = UDim2.new(0, 10, 0, 60)
-flyButton.Text = "Fly"
+flyButton.Size = UDim2.new(0, 220, 0, 50)
+flyButton.Position = UDim2.new(0.5, -110, 0, 60)
+flyButton.Text = "Fly (ON/OFF)"
 flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green background
+flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
 
+local flying = false
 flyButton.MouseButton1Click:Connect(function()
-    print("Fly activated!")
-    -- Add your fly function code here
+    flying = not flying
+    if flying then
+        -- Activer le fly (remplace par un vrai script de Fly)
+        print("Fly activated!")
+        -- Code pour activer le fly ici
+    else
+        -- Désactiver le fly
+        print("Fly deactivated!")
+        -- Code pour désactiver le fly ici
+    end
 end)
 
--- Speed Button (adjusted size, color, and position)
+-- Créer un bouton Speed
 local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0, 200, 0, 40)
-speedButton.Position = UDim2.new(0, 10, 0, 110)
-speedButton.Text = "Speed"
+speedButton.Size = UDim2.new(0, 220, 0, 50)
+speedButton.Position = UDim2.new(0.5, -110, 0, 120)
+speedButton.Text = "Speed (ON/OFF)"
 speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)  -- Blue background
+speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
 speedButton.Parent = frame
 
+local speeding = false
 speedButton.MouseButton1Click:Connect(function()
-    print("Speed activated!")
-    -- Add your speed function code here
-end)
-
--- Function to drag the menu (unchanged)
-local dragging = false
-local dragStart
-local startPos
-
-frame.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = frame.Position
+    speeding = not speeding
+    if speeding then
+        -- Activer la vitesse (ajuste la vitesse du joueur)
+        print("Speed activated!")
+        -- Code pour augmenter la vitesse ici
+    else
+        -- Désactiver la vitesse
+        print("Speed deactivated!")
+        -- Code pour revenir à la vitesse normale ici
     end
 end)
 
-frame.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - dragStart
-        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+-- Créer un bouton GodMode
+local godModeButton = Instance.new("TextButton")
+godModeButton.Size = UDim2.new(0, 220, 0, 50)
+godModeButton.Position = UDim2.new(0.5, -110, 0, 180)
+godModeButton.Text = "GodMode (ON/OFF)"
+godModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+godModeButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+godModeButton.Parent = frame
+
+local godMode = false
+godModeButton.MouseButton1Click:Connect(function()
+    godMode = not godMode
+    if godMode then
+        -- Activer GodMode (rendre invincible)
+        print("GodMode activated!")
+        -- Code pour rendre le joueur invincible ici
+    else
+        -- Désactiver GodMode
+        print("GodMode deactivated!")
+        -- Code pour enlever l'invincibilité ici
     end
 end)
 
-frame.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = false
-    end
+-- Créer un bouton Toggle Menu (ouvrir/fermer le menu)
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 220, 0, 50)
+toggleButton.Position = UDim2.new(0.5, -110, 0, 240)
+toggleButton.Text = "Toggle Menu"
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+toggleButton.Parent = frame
+
+toggleButton.MouseButton1Click:Connect(function()
+    -- Permet de fermer ou ouvrir le menu
+    frame.Visible = not frame.Visible
 end)
