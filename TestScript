@@ -1,104 +1,98 @@
--- Créer un ScreenGui pour afficher le menu
+-- Créer un ScreenGui pour le menu admin
 local player = game.Players.LocalPlayer
+local playerName = player.Name
+
+-- Vérifier si le joueur est un administrateur (selon son rôle ou son nom)
+local adminList = {"AdminName1", "AdminName2", "AdminName3"}  -- Remplace avec les noms des admins
+local isAdmin = false
+
+for _, admin in pairs(adminList) do
+    if playerName == admin then
+        isAdmin = true
+        break
+    end
+end
+
+if not isAdmin then
+    return  -- Si le joueur n'est pas un admin, ne rien afficher
+end
+
+-- Créer la GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player.PlayerGui
 
--- Créer la frame principale du menu
+-- Créer la frame du menu
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 400)
-frame.Position = UDim2.new(0.5, -125, 0.5, -200)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Size = UDim2.new(0, 300, 0, 400)
+frame.Position = UDim2.new(0.5, -150, 0.5, -200)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 frame.Parent = screenGui
 
--- Titre du menu
+-- Créer un titre pour le menu
 local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, 0, 0, 40)
-titleLabel.Text = "Mega Cheat by Myster78950"
+titleLabel.Size = UDim2.new(1, 0, 0, 50)
+titleLabel.Text = "Admin Menu"
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleLabel.TextSize = 18
+titleLabel.TextSize = 22
 titleLabel.TextAlignment = Enum.TextAlignment.Center
 titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 titleLabel.Parent = frame
 
--- Créer un bouton Fly
+-- Créer un bouton pour donner des pouvoirs (par exemple, Fly)
 local flyButton = Instance.new("TextButton")
-flyButton.Size = UDim2.new(0, 220, 0, 50)
-flyButton.Position = UDim2.new(0.5, -110, 0, 60)
-flyButton.Text = "Fly (ON/OFF)"
+flyButton.Size = UDim2.new(0, 280, 0, 50)
+flyButton.Position = UDim2.new(0.5, -140, 0, 80)
+flyButton.Text = "Activate Fly"
 flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
 
-local flying = false
 flyButton.MouseButton1Click:Connect(function()
-    flying = not flying
-    if flying then
-        -- Activer le fly (remplace par un vrai script de Fly)
-        print("Fly activated!")
-        -- Code pour activer le fly ici
-    else
-        -- Désactiver le fly
-        print("Fly deactivated!")
-        -- Code pour désactiver le fly ici
-    end
+    -- Activer un effet de vol pour le joueur
+    print(playerName .. " activated Fly!")
+    -- Code pour activer le vol ici
 end)
 
--- Créer un bouton Speed
+-- Créer un bouton pour donner des pouvoirs de Speed
 local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0, 220, 0, 50)
-speedButton.Position = UDim2.new(0.5, -110, 0, 120)
-speedButton.Text = "Speed (ON/OFF)"
+speedButton.Size = UDim2.new(0, 280, 0, 50)
+speedButton.Position = UDim2.new(0.5, -140, 0, 150)
+speedButton.Text = "Activate Speed"
 speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
 speedButton.Parent = frame
 
-local speeding = false
 speedButton.MouseButton1Click:Connect(function()
-    speeding = not speeding
-    if speeding then
-        -- Activer la vitesse (ajuste la vitesse du joueur)
-        print("Speed activated!")
-        -- Code pour augmenter la vitesse ici
-    else
-        -- Désactiver la vitesse
-        print("Speed deactivated!")
-        -- Code pour revenir à la vitesse normale ici
-    end
+    -- Activer un effet de vitesse pour le joueur
+    print(playerName .. " activated Speed!")
+    -- Code pour augmenter la vitesse ici
 end)
 
--- Créer un bouton GodMode
+-- Créer un bouton pour rendre le joueur invincible (GodMode)
 local godModeButton = Instance.new("TextButton")
-godModeButton.Size = UDim2.new(0, 220, 0, 50)
-godModeButton.Position = UDim2.new(0.5, -110, 0, 180)
-godModeButton.Text = "GodMode (ON/OFF)"
+godModeButton.Size = UDim2.new(0, 280, 0, 50)
+godModeButton.Position = UDim2.new(0.5, -140, 0, 220)
+godModeButton.Text = "Activate GodMode"
 godModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-godModeButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+godModeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 godModeButton.Parent = frame
 
-local godMode = false
 godModeButton.MouseButton1Click:Connect(function()
-    godMode = not godMode
-    if godMode then
-        -- Activer GodMode (rendre invincible)
-        print("GodMode activated!")
-        -- Code pour rendre le joueur invincible ici
-    else
-        -- Désactiver GodMode
-        print("GodMode deactivated!")
-        -- Code pour enlever l'invincibilité ici
-    end
+    -- Activer GodMode pour rendre le joueur invincible
+    print(playerName .. " activated GodMode!")
+    -- Code pour rendre invincible ici
 end)
 
--- Créer un bouton Toggle Menu (ouvrir/fermer le menu)
-local toggleButton = Instance.new("TextButton")
-toggleButton.Size = UDim2.new(0, 220, 0, 50)
-toggleButton.Position = UDim2.new(0.5, -110, 0, 240)
-toggleButton.Text = "Toggle Menu"
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
-toggleButton.Parent = frame
+-- Créer un bouton pour fermer le menu
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 280, 0, 50)
+closeButton.Position = UDim2.new(0.5, -140, 0, 290)
+closeButton.Text = "Close Menu"
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+closeButton.Parent = frame
 
-toggleButton.MouseButton1Click:Connect(function()
-    -- Permet de fermer ou ouvrir le menu
-    frame.Visible = not frame.Visible
+closeButton.MouseButton1Click:Connect(function()
+    -- Fermer le menu admin
+    screenGui:Destroy()
 end)
