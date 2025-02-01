@@ -32,9 +32,9 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 400, 0, 250)
-frame.Position = UDim2.new(0.5, -200, 0.5, -125)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Size = UDim2.new(0, 400, 0, 300)
+frame.Position = UDim2.new(0.5, -200, 0.5, -150)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 frame.BackgroundTransparency = 0.8
 frame.BorderSizePixel = 0
 frame.Parent = screenGui
@@ -65,7 +65,7 @@ introLabel.TextSize = 14
 introLabel.BackgroundTransparency = 1
 introLabel.Parent = frame
 
--- Création du bouton pour fermer/ouvrir le menu
+-- Bouton pour ouvrir/fermer le menu
 local toggleButton = Instance.new("TextButton")
 toggleButton.Size = UDim2.new(0, 40, 0, 40)
 toggleButton.Position = UDim2.new(1, -40, 0, 0)
@@ -82,6 +82,23 @@ flyButton.Text = "Fly"
 flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
+
+-- Création des boutons de cheat
+local speedButton = Instance.new("TextButton")
+speedButton.Size = UDim2.new(0, 180, 0, 40)
+speedButton.Position = UDim2.new(0, 10, 0, 160)
+speedButton.Text = "Speed Hack"
+speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+speedButton.Parent = frame
+
+local godmodeButton = Instance.new("TextButton")
+godmodeButton.Size = UDim2.new(0, 180, 0, 40)
+godmodeButton.Position = UDim2.new(0, 10, 0, 210)
+godmodeButton.Text = "Godmode"
+godmodeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+godmodeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 255)
+godmodeButton.Parent = frame
 
 -- Fonction pour déplacer le menu
 local dragging = false
@@ -131,6 +148,21 @@ flyButton.MouseButton1Click:Connect(function()
     else
         flyButton.Text = "Fly"
         flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    end
+end)
+
+-- Fonction pour activer le Speed Hack
+speedButton.MouseButton1Click:Connect(function()
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100 -- Vitesse rapide
+    speedButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0) -- Indicateur d'activation
+end)
+
+-- Fonction pour activer Godmode
+godmodeButton.MouseButton1Click:Connect(function()
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.Health = humanoid.MaxHealth -- Restaure la santé à son maximum
+        godmodeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0) -- Indicateur d'activation
     end
 end)
 ]])()
