@@ -2,12 +2,12 @@ local player = game.Players.LocalPlayer
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player.PlayerGui
 
--- Main menu frame
+-- Main menu frame (adjusted color and transparency)
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 400, 0, 300)
 frame.Position = UDim2.new(0.5, -200, 0.5, -150)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-frame.BackgroundTransparency = 0.6
+frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)  -- Darker grey background
+frame.BackgroundTransparency = 0.2  -- Slightly transparent
 frame.Parent = screenGui
 
 -- Menu label
@@ -19,35 +19,35 @@ label.TextSize = 20
 label.BackgroundTransparency = 1
 label.Parent = frame
 
--- Fly Button
+-- Fly Button (adjusted size, color, and position)
 local flyButton = Instance.new("TextButton")
 flyButton.Size = UDim2.new(0, 200, 0, 40)
 flyButton.Position = UDim2.new(0, 10, 0, 60)
 flyButton.Text = "Fly"
 flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green background
 flyButton.Parent = frame
 
 flyButton.MouseButton1Click:Connect(function()
     print("Fly activated!")
-    -- Add code for activating fly here
+    -- Add your fly function code here
 end)
 
--- Speed Button
+-- Speed Button (adjusted size, color, and position)
 local speedButton = Instance.new("TextButton")
 speedButton.Size = UDim2.new(0, 200, 0, 40)
 speedButton.Position = UDim2.new(0, 10, 0, 110)
 speedButton.Text = "Speed"
 speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)  -- Blue background
 speedButton.Parent = frame
 
 speedButton.MouseButton1Click:Connect(function()
     print("Speed activated!")
-    -- Add code for activating speed here
+    -- Add your speed function code here
 end)
 
--- Function to drag the menu
+-- Function to drag the menu (unchanged)
 local dragging = false
 local dragStart
 local startPos
