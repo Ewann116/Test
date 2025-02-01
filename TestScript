@@ -1,158 +1,53 @@
-loadstring([[
--- Création du GUI Mega Cheat
 local player = game.Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = char:WaitForChild("HumanoidRootPart")
-local flying = false
-local speed = 50
-local teleporting = false
-local godModeActive = false
-local noclipActive = false
-local menuOpen = true
-
--- Fonction pour activer/désactiver le fly
-local function toggleFly()
-    flying = not flying
-    if flying then
-        local bodyVelocity = Instance.new("BodyVelocity")
-        bodyVelocity.Velocity = Vector3.new(0, speed, 0)
-        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        bodyVelocity.Parent = humanoidRootPart
-        humanoidRootPart:SetAttribute("FlyForce", bodyVelocity)
-    else
-        local flyForce = humanoidRootPart:GetAttribute("FlyForce")
-        if flyForce then
-            flyForce:Destroy()
-        end
-    end
-end
-
--- Fonction pour activer/désactiver le godmode
-local function toggleGodMode()
-    godModeActive = not godModeActive
-    if godModeActive then
-        local humanoid = player.Character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.Health = humanoid.MaxHealth -- Restore health to max
-        end
-    else
-        -- Implement logic to disable godmode, i.e., remove invincibility
-    end
-end
-
--- Fonction pour activer/désactiver le NoClip
-local function toggleNoClip()
-    noclipActive = not noclipActive
-    local character = player.Character
-    if character then
-        for _, part in pairs(character:GetChildren()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = not noclipActive
-            end
-        end
-    end
-end
-
--- Fonction pour activer le Speed Hack
-local function toggleSpeed()
-    player.Character.Humanoid.WalkSpeed = 100 -- Vitesse rapide
-end
-
--- Fonction pour téléporter
-local function teleportToMouse()
-    local mousePos = game:GetService("Players").LocalPlayer:GetMouse().Hit.p
-    player.Character:MoveTo(mousePos)
-end
-
--- Création du menu GUI
 local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.Parent = player.PlayerGui
 
+-- Main menu frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 500, 0, 400)
-frame.Position = UDim2.new(0.5, -250, 0.5, -200)
-frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-frame.BackgroundTransparency = 0.8
-frame.BorderSizePixel = 0
+frame.Size = UDim2.new(0, 400, 0, 300)
+frame.Position = UDim2.new(0.5, -200, 0.5, -150)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundTransparency = 0.6
 frame.Parent = screenGui
 
--- En-tête du menu
-local header = Instance.new("Frame")
-header.Size = UDim2.new(1, 0, 0, 40)
-header.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-header.BorderSizePixel = 0
-header.Parent = frame
+-- Menu label
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0, 40)
+label.Text = "Mega Cheat Menu"
+label.TextColor3 = Color3.fromRGB(255, 255, 255)
+label.TextSize = 20
+label.BackgroundTransparency = 1
+label.Parent = frame
 
-local headerLabel = Instance.new("TextLabel")
-headerLabel.Size = UDim2.new(1, 0, 1, 0)
-headerLabel.Text = "Mega Cheat Menu - by Myster78950"
-headerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-headerLabel.TextSize = 18
-headerLabel.TextAlign = Enum.TextAnchor.MiddleCenter
-headerLabel.BackgroundTransparency = 1
-headerLabel.Parent = header
-
--- Message d'introduction
-local introLabel = Instance.new("TextLabel")
-introLabel.Size = UDim2.new(1, 0, 0.1, 0)
-introLabel.Position = UDim2.new(0, 0, 0.2, 0)
-introLabel.Text = "Ce script a été créé par Myster78950"
-introLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-introLabel.TextSize = 14
-introLabel.BackgroundTransparency = 1
-introLabel.Parent = frame
-
--- Bouton pour ouvrir/fermer le menu
-local toggleButton = Instance.new("TextButton")
-toggleButton.Size = UDim2.new(0, 40, 0, 40)
-toggleButton.Position = UDim2.new(1, -40, 0, 0)
-toggleButton.Text = "+"
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-toggleButton.Parent = frame
-
--- Création des boutons de Mega Cheat
+-- Fly Button
 local flyButton = Instance.new("TextButton")
 flyButton.Size = UDim2.new(0, 200, 0, 40)
-flyButton.Position = UDim2.new(0, 10, 0, 100)
+flyButton.Position = UDim2.new(0, 10, 0, 60)
 flyButton.Text = "Fly"
 flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
 
+flyButton.MouseButton1Click:Connect(function()
+    print("Fly activated!")
+    -- Add code for activating fly here
+end)
+
+-- Speed Button
 local speedButton = Instance.new("TextButton")
 speedButton.Size = UDim2.new(0, 200, 0, 40)
-speedButton.Position = UDim2.new(0, 10, 0, 160)
-speedButton.Text = "Speed Hack"
+speedButton.Position = UDim2.new(0, 10, 0, 110)
+speedButton.Text = "Speed"
 speedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
 speedButton.Parent = frame
 
-local godmodeButton = Instance.new("TextButton")
-godmodeButton.Size = UDim2.new(0, 200, 0, 40)
-godmodeButton.Position = UDim2.new(0, 10, 0, 220)
-godmodeButton.Text = "Godmode"
-godmodeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-godmodeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 255)
-godmodeButton.Parent = frame
+speedButton.MouseButton1Click:Connect(function()
+    print("Speed activated!")
+    -- Add code for activating speed here
+end)
 
-local noclipButton = Instance.new("TextButton")
-noclipButton.Size = UDim2.new(0, 200, 0, 40)
-noclipButton.Position = UDim2.new(0, 10, 0, 280)
-noclipButton.Text = "NoClip"
-noclipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-noclipButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
-noclipButton.Parent = frame
-
-local teleportButton = Instance.new("TextButton")
-teleportButton.Size = UDim2.new(0, 200, 0, 40)
-teleportButton.Position = UDim2.new(0, 10, 0, 340)
-teleportButton.Text = "Teleport"
-teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-teleportButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-teleportButton.Parent = frame
-
--- Fonction pour déplacer le menu
+-- Function to drag the menu
 local dragging = false
 local dragStart
 local startPos
@@ -178,23 +73,3 @@ frame.InputEnded:Connect(function(input)
         dragging = false
     end
 end)
-
--- Fonction pour ouvrir/fermer le menu
-toggleButton.MouseButton1Click:Connect(function()
-    menuOpen = not menuOpen
-    if menuOpen then
-        frame.Visible = true
-        toggleButton.Text = "-"
-    else
-        frame.Visible = false
-        toggleButton.Text = "+"
-    end
-end)
-
--- Activation des cheats
-flyButton.MouseButton1Click:Connect(function() toggleFly() end)
-speedButton.MouseButton1Click:Connect(function() toggleSpeed() end)
-godmodeButton.MouseButton1Click:Connect(function() toggleGodMode() end)
-noclipButton.MouseButton1Click:Connect(function() toggleNoClip() end)
-teleportButton.MouseButton1Click:Connect(function() teleportToMouse() end)
-]])()
