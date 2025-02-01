@@ -1,0 +1,61 @@
+-- Création de l'interface utilisateur
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Création du Frame pour l'écran de chargement
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BackgroundTransparency = 0.5
+frame.Parent = playerGui
+
+-- Création du texte
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(0, 300, 0, 50)
+textLabel.Position = UDim2.new(0, 0, 0, 0)
+textLabel.Text = "By Ewann 255"
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.TextSize = 30
+textLabel.Parent = frame
+
+-- Création du bouton
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0, 50, 0, 100)
+button.Text = "Cliquez pour voler"
+button.TextSize = 20
+button.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+button.Parent = frame
+
+-- Fonction pour activer le vol
+local flying = false
+local humanoid = player.Character:WaitForChild("Humanoid")
+local bodyVelocity = nil
+
+local function toggleFly()
+    if flying then
+        -- Arrêter de voler
+        if bodyVelocity then
+            bodyVelocity:Destroy()
+            bodyVelocity = nil
+        end
+        humanoid.PlatformStand = false
+        flying = false
+    else
+        -- Activer le vol
+        humanoid.PlatformStand = true
+        bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
+        bodyVelocity.Velocity = Vector3.new(0, 50, 0)
+        bodyVelocity.Parent = player.Character:WaitForChild("HumanoidRootPart")
+        flying = true
+    end
+end
+
+-- Ajouter un événement au bouton
+button.MouseButton1Click:Connect(toggleFly)
+
+-- Si tu veux que l'interface disparaisse après un certain temps, tu peux ajouter ceci :
+wait(5)  -- Attendre 5 secondes avant de fermer l'écran de chargement
+frame:Destroy()
