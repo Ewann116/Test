@@ -1,34 +1,16 @@
--- Créer un ScreenGui pour le menu admin
+-- Créer un menu admin compatible avec Solara
 local player = game.Players.LocalPlayer
-local playerName = player.Name
 
--- Vérifier si le joueur est un administrateur (selon son rôle ou son nom)
-local adminList = {"AdminName1", "AdminName2", "AdminName3"}  -- Remplace avec les noms des admins
-local isAdmin = false
-
-for _, admin in pairs(adminList) do
-    if playerName == admin then
-        isAdmin = true
-        break
-    end
-end
-
-if not isAdmin then
-    return  -- Si le joueur n'est pas un admin, ne rien afficher
-end
-
--- Créer la GUI
+-- Créer la GUI du menu
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player.PlayerGui
 
--- Créer la frame du menu
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 300, 0, 400)
 frame.Position = UDim2.new(0.5, -150, 0.5, -200)
 frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 frame.Parent = screenGui
 
--- Créer un titre pour le menu
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0, 50)
 titleLabel.Text = "Admin Menu"
@@ -38,7 +20,7 @@ titleLabel.TextAlignment = Enum.TextAlignment.Center
 titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 titleLabel.Parent = frame
 
--- Créer un bouton pour donner des pouvoirs (par exemple, Fly)
+-- Bouton pour activer le vol
 local flyButton = Instance.new("TextButton")
 flyButton.Size = UDim2.new(0, 280, 0, 50)
 flyButton.Position = UDim2.new(0.5, -140, 0, 80)
@@ -48,12 +30,12 @@ flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 flyButton.Parent = frame
 
 flyButton.MouseButton1Click:Connect(function()
-    -- Activer un effet de vol pour le joueur
-    print(playerName .. " activated Fly!")
-    -- Code pour activer le vol ici
+    -- Code pour activer le vol
+    print(player.Name .. " activated Fly!")
+    -- Implémente le vol ici (utilisation de BodyVelocity ou autres méthodes)
 end)
 
--- Créer un bouton pour donner des pouvoirs de Speed
+-- Bouton pour activer la vitesse
 local speedButton = Instance.new("TextButton")
 speedButton.Size = UDim2.new(0, 280, 0, 50)
 speedButton.Position = UDim2.new(0.5, -140, 0, 150)
@@ -63,12 +45,12 @@ speedButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
 speedButton.Parent = frame
 
 speedButton.MouseButton1Click:Connect(function()
-    -- Activer un effet de vitesse pour le joueur
-    print(playerName .. " activated Speed!")
-    -- Code pour augmenter la vitesse ici
+    -- Code pour augmenter la vitesse
+    print(player.Name .. " activated Speed!")
+    -- Implémente la vitesse ici (par exemple, augmenter le WalkSpeed)
 end)
 
--- Créer un bouton pour rendre le joueur invincible (GodMode)
+-- Bouton pour activer GodMode
 local godModeButton = Instance.new("TextButton")
 godModeButton.Size = UDim2.new(0, 280, 0, 50)
 godModeButton.Position = UDim2.new(0.5, -140, 0, 220)
@@ -78,12 +60,12 @@ godModeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 godModeButton.Parent = frame
 
 godModeButton.MouseButton1Click:Connect(function()
-    -- Activer GodMode pour rendre le joueur invincible
-    print(playerName .. " activated GodMode!")
-    -- Code pour rendre invincible ici
+    -- Code pour activer GodMode
+    print(player.Name .. " activated GodMode!")
+    -- Implémente GodMode ici (par exemple, rendre le joueur invincible)
 end)
 
--- Créer un bouton pour fermer le menu
+-- Bouton pour fermer le menu
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0, 280, 0, 50)
 closeButton.Position = UDim2.new(0.5, -140, 0, 290)
