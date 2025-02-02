@@ -1,4 +1,4 @@
--- 📌 Script Dev BY Myster78950 - Ultimate Hacking Menu
+-- 📌 Script Dev BY Myster78950 - Hacking Menu
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -7,58 +7,72 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 -- 📌 Création du menu hacking pro
-local function createMenu()
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Parent = game:GetService("CoreGui")
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game:GetService("CoreGui")
 
-    local Frame = Instance.new("Frame", ScreenGui)
-    Frame.Size = UDim2.new(0.5, 0, 0.7, 0)
-    Frame.Position = UDim2.new(0.25, 0, 0.15, 0)
-    Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    Frame.BorderSizePixel = 2
-    Frame.Active = true
-    Frame.Draggable = true
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0.3, 0, 0.4, 0)
+Frame.Position = UDim2.new(0.35, 0, 0.3, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Frame.BorderSizePixel = 2
+Frame.Active = true
+Frame.Draggable = true
 
-    local Title = Instance.new("TextLabel", Frame)
-    Title.Size = UDim2.new(1, 0, 0.1, 0)
-    Title.Text = "💀 Script Dev BY Myster78950 💀"
-    Title.TextColor3 = Color3.fromRGB(0, 255, 0)
-    Title.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-    Title.Font = Enum.Font.Code
-    Title.TextSize = 24
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1, 0, 0.15, 0)
+Title.Text = "💀 Script Dev BY Myster78950 💀"
+Title.TextColor3 = Color3.fromRGB(0, 255, 0)
+Title.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Title.Font = Enum.Font.Code
+Title.TextSize = 22
 
-    -- 📌 ScrollingFrame pour afficher toutes les commandes
-    local CommandFrame = Instance.new("ScrollingFrame", Frame)
-    CommandFrame.Size = UDim2.new(1, 0, 0.85, 0)
-    CommandFrame.Position = UDim2.new(0, 0, 0.12, 0)
-    CommandFrame.CanvasSize = UDim2.new(0, 0, 3, 0)
-    CommandFrame.ScrollBarThickness = 10
-    CommandFrame.BackgroundTransparency = 1
-
-    local function AddCommandButton(command)
-        local Button = Instance.new("TextButton", CommandFrame)
-        Button.Size = UDim2.new(1, 0, 0.05, 0)
-        Button.Text = command
-        Button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        Button.TextColor3 = Color3.fromRGB(0, 255, 0)
-        Button.Font = Enum.Font.Code
-        Button.TextSize = 18
-    end
-
-    local commands = {"Fly", "Speed+", "Speed-", "Noclip", "Invisible", "Godmode", "ESP", "Aimbot", "Wallhack", "Teleport", "Kill All", "Infinite Jump", "Super Jump", "No Recoil", "Triggerbot", "Bunny Hop", "Fake Lag", "Auto Clicker", "X-Ray Vision", "Rapid Fire", "Silent Aim", "Spinbot", "Third Person", "Remove Fog"}
-    for _, cmd in ipairs(commands) do
-        AddCommandButton(cmd)
-    end
-
-    print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
+-- 📌 Ajout des boutons
+local function CreateButton(text, position, callback)
+    local Button = Instance.new("TextButton", Frame)
+    Button.Size = UDim2.new(1, -10, 0.1, 0)
+    Button.Position = UDim2.new(0, 5, position, 0)
+    Button.Text = text
+    Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Button.TextColor3 = Color3.fromRGB(0, 255, 0)
+    Button.Font = Enum.Font.Code
+    Button.TextSize = 18
+    Button.MouseButton1Click:Connect(callback)
 end
 
--- 📌 Assurer que le menu est recréé après chaque reset
-player.CharacterAdded:Connect(function()
-    character = player.Character or player.CharacterAdded:Wait()
-    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-    createMenu()
+-- 📌 Fly amélioré avec réglage de vitesse
+local flying = false
+local flySpeed = 50
+local flyVelocity
+
+CreateButton("Fly (Toggle)", 0.2, function()
+    flying = not flying
+    if flying then
+        flyVelocity = Instance.new("BodyVelocity")
+        flyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        flyVelocity.Parent = humanoidRootPart
+        RunService.RenderStepped:Connect(function()
+            if flying then
+                local moveDir = Vector3.new(0, 0, 0)
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                    moveDir = moveDir + (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                    moveDir = moveDir + Vector3.new(0, flySpeed, 0)
+                end
+                flyVelocity.Velocity = moveDir
+            end
+        end)
+    else
+        if flyVelocity then flyVelocity:Destroy() end
+    end
 end)
 
--- 📌 Créer initialement le menu
-createMenu()
+CreateButton("Augmenter Vitesse Fly", 0.3, function()
+    flySpeed = flySpeed + 10
+end)
+
+CreateButton("Diminuer Vitesse Fly", 0.4, function()
+    flySpeed = flySpeed - 10
+end)
+
+print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
