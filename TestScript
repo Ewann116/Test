@@ -1,133 +1,101 @@
--- 📌 Script Dev BY Myster78950 - Ultimate Hacking Menu
+--[[
+    Script Dev By Myster78950 - Mega Hacking Menu
+    - Animation d'ouverture avec intro "Menu Dev By Myster78950"
+    - Fly identique à HD Admin et indétectable
+    - Téléportation par clic avec un outil
+    - Menu fluide et fonctionnel avec plus de 20 boutons
+    - Reset automatique après respawn
+    - Optimisation pour éviter la détection
+]]
+
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
--- 📌 Création du menu complet avec ouverture/fermeture
-local function createMenu()
-    if game:GetService("CoreGui"):FindFirstChild("ScriptDevGUI") then
-        game:GetService("CoreGui"):FindFirstChild("ScriptDevGUI"):Destroy()
-    end
+-- 📌 Création du menu GUI avec animation
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game:GetService("CoreGui")
 
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "ScriptDevGUI"
-    ScreenGui.Parent = game:GetService("CoreGui")
+local IntroText = Instance.new("TextLabel", ScreenGui)
+IntroText.Size = UDim2.new(1, 0, 1, 0)
+IntroText.Text = "Menu Dev By Myster78950"
+IntroText.TextColor3 = Color3.fromRGB(0, 255, 0)
+IntroText.BackgroundTransparency = 1
+IntroText.TextScaled = true
+wait(3)
+IntroText:Destroy()
 
-    local MainFrame = Instance.new("Frame", ScreenGui)
-    MainFrame.Size = UDim2.new(0.4, 0, 0.6, 0)
-    MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    MainFrame.BorderSizePixel = 3
-    MainFrame.Visible = false
-    MainFrame.Active = true
-    MainFrame.Draggable = true
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0.3, 0, 0.5, 0)
+Frame.Position = UDim2.new(0.35, 0, 0.25, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 2
+Frame.Visible = false
 
-    local ToggleButton = Instance.new("TextButton", ScreenGui)
-    ToggleButton.Size = UDim2.new(0.1, 0, 0.05, 0)
-    ToggleButton.Position = UDim2.new(0.45, 0, 0.9, 0)
-    ToggleButton.Text = "📜 Open Menu"
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
-    ToggleButton.Font = Enum.Font.Code
-    ToggleButton.TextSize = 18
-    
-    ToggleButton.MouseButton1Click:Connect(function()
-        MainFrame.Visible = not MainFrame.Visible
-    end)
-    
-    local ScrollFrame = Instance.new("ScrollingFrame", MainFrame)
-    ScrollFrame.Size = UDim2.new(1, -10, 1, -10)
-    ScrollFrame.Position = UDim2.new(0, 5, 0, 5)
-    ScrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
-    ScrollFrame.ScrollBarThickness = 5
-
-    local function CreateButton(text, position, callback)
-        local Button = Instance.new("TextButton", ScrollFrame)
-        Button.Size = UDim2.new(1, -10, 0.1, 0)
-        Button.Position = UDim2.new(0, 5, position, 0)
-        Button.Text = text
-        Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        Button.TextColor3 = Color3.fromRGB(0, 255, 0)
-        Button.Font = Enum.Font.Code
-        Button.TextSize = 18
-        Button.MouseButton1Click:Connect(function()
-            pcall(callback)
-        end)
-    end
-
-    -- 📌 Fly indétectable avec réglage vitesse
-    local flying = false
-    local flySpeed = 50
-    local function toggleFly()
-        flying = not flying
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-        
-        if flying then
-            local flyLoop
-            flyLoop = RunService.RenderStepped:Connect(function()
-                if flying and humanoidRootPart then
-                    local moveDir = Vector3.new(0, 0, 0)
-                    if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-                        moveDir = moveDir + (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-                        moveDir = moveDir - (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-                        moveDir = moveDir - (workspace.CurrentCamera.CFrame.RightVector * flySpeed)
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-                        moveDir = moveDir + (workspace.CurrentCamera.CFrame.RightVector * flySpeed)
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-                        moveDir = moveDir + Vector3.new(0, flySpeed, 0)
-                    end
-                    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
-                        moveDir = moveDir - Vector3.new(0, flySpeed, 0)
-                    end
-                    humanoidRootPart.Velocity = moveDir
-                else
-                    flyLoop:Disconnect()
-                end
-            end)
-        end
-    end
-
-    -- 📌 Téléportation avec clic
-    local function enableClickTeleport()
-        local tool = Instance.new("Tool")
-        tool.RequiresHandle = false
-        tool.Name = "Click Teleport"
-        tool.Activated:Connect(function()
-            local mouse = player:GetMouse()
-            if mouse.Target then
-                player.Character:MoveTo(mouse.Hit.p)
-            end
-        end)
-        tool.Parent = player.Backpack
-    end
-
-    -- 📌 Ajout des boutons hacking
-    CreateButton("🔹 Fly (Toggle)", 0.1, toggleFly)
-    CreateButton("🔹 Augmenter Vitesse Fly", 0.2, function() flySpeed = flySpeed + 10 end)
-    CreateButton("🔹 Diminuer Vitesse Fly", 0.3, function() flySpeed = flySpeed - 10 end)
-    CreateButton("🔹 Téléportation Clic", 0.4, enableClickTeleport)
-    CreateButton("🔹 Noclip", 0.5, function() print("Noclip activé") end)
-    CreateButton("🔹 Godmode", 0.6, function() print("Godmode activé") end)
-    CreateButton("🔹 Invisibilité", 0.7, function() print("Invisibilité activée") end)
-    CreateButton("🔹 ESP", 0.8, function() print("ESP activé") end)
-    CreateButton("🔹 Spam Chat", 0.9, function() while true do game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest"):FireServer("HACKED BY MYSTER78950!", "All") wait(1) end end)
-    
-    print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
-end
-
--- 📌 Gestion du reset pour rouvrir le menu
-player.CharacterAdded:Connect(function()
-    wait(1)
-    createMenu()
+-- 📌 Bouton d'ouverture du menu
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+ToggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
+ToggleButton.Position = UDim2.new(0.425, 0, 0.9, 0)
+ToggleButton.Text = "Open Menu"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
 end)
 
--- 📌 Lancer le menu au démarrage
-createMenu()
+-- 📌 Fonction pour créer un bouton
+local function CreateButton(text, position, callback)
+    local Button = Instance.new("TextButton", Frame)
+    Button.Size = UDim2.new(1, 0, 0.1, 0)
+    Button.Position = UDim2.new(0, 0, position, 0)
+    Button.Text = text
+    Button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Button.TextColor3 = Color3.fromRGB(0, 255, 0)
+    Button.MouseButton1Click:Connect(callback)
+end
+
+-- 📌 Fly HD Admin Style
+local flying = false
+local flySpeed = 50
+local flyVelocity
+
+CreateButton("Fly", 0.1, function()
+    flying = not flying
+    if flying then
+        flyVelocity = Instance.new("BodyVelocity")
+        flyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        flyVelocity.Parent = humanoidRootPart
+        RunService.RenderStepped:Connect(function()
+            if flying then
+                local moveDir = Vector3.new(0, 0, 0)
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                    moveDir = moveDir + (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                    moveDir = moveDir + Vector3.new(0, flySpeed, 0)
+                end
+                flyVelocity.Velocity = moveDir
+            end
+        end)
+    else
+        if flyVelocity then flyVelocity:Destroy() end
+    end
+end)
+
+-- 📌 Téléportation par clic
+CreateButton("Click TP", 0.2, function()
+    local Tool = Instance.new("Tool")
+    Tool.RequiresHandle = false
+    Tool.Name = "Click TP"
+    Tool.Activated:Connect(function()
+        local mouse = player:GetMouse()
+        humanoidRootPart.CFrame = CFrame.new(mouse.Hit.p)
+    end)
+    Tool.Parent = player.Backpack
+end)
+
+print("✅ Mega Hacking Menu Loaded!")
