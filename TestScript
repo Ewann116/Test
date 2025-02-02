@@ -15,13 +15,15 @@ local function createMenu()
     ScreenGui.Name = "ScriptDevGUI"
     ScreenGui.Parent = game:GetService("CoreGui")
 
-    local Frame = Instance.new("Frame", ScreenGui)
+    local Frame = Instance.new("ScrollingFrame", ScreenGui)
     Frame.Size = UDim2.new(0.3, 0, 0.5, 0)
     Frame.Position = UDim2.new(0.35, 0, 0.25, 0)
     Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     Frame.BorderSizePixel = 2
     Frame.Active = true
     Frame.Draggable = true
+    Frame.CanvasSize = UDim2.new(0, 0, 2, 0) -- Permet de scroller en bas
+    Frame.ScrollBarThickness = 5 -- Épaisseur de la barre de scroll
 
     local Title = Instance.new("TextLabel", Frame)
     Title.Size = UDim2.new(1, 0, 0.15, 0)
@@ -31,7 +33,7 @@ local function createMenu()
     Title.Font = Enum.Font.Code
     Title.TextSize = 22
 
-    -- 📌 Ajout des boutons
+    -- 📌 Ajout des boutons améliorés
     local function CreateButton(text, position, callback)
         local Button = Instance.new("TextButton", Frame)
         Button.Size = UDim2.new(1, -10, 0.08, 0)
@@ -41,7 +43,9 @@ local function createMenu()
         Button.TextColor3 = Color3.fromRGB(0, 255, 0)
         Button.Font = Enum.Font.Code
         Button.TextSize = 18
-        Button.MouseButton1Click:Connect(callback)
+        Button.MouseButton1Click:Connect(function()
+            pcall(callback)
+        end)
     end
 
     -- 📌 Fly amélioré et fluide
@@ -96,11 +100,13 @@ local function createMenu()
     CreateButton("Fly (Toggle)", 0.2, toggleFly)
     CreateButton("Augmenter Vitesse Fly", 0.3, function() flySpeed = flySpeed + 10 end)
     CreateButton("Diminuer Vitesse Fly", 0.4, function() flySpeed = flySpeed - 10 end)
-    CreateButton("Noclip", 0.5, function() print("Noclip activé") end)
-    CreateButton("Godmode", 0.6, function() print("Godmode activé") end)
-    CreateButton("Teleport", 0.7, function() print("Teleport activé") end)
-    CreateButton("Invisibilité", 0.8, function() print("Invisibilité activée") end)
-    CreateButton("ESP", 0.9, function() print("ESP activé") end)
+    CreateButton("Spam Chat", 0.5, function() while true do game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest"):FireServer("HACKED BY MYSTER78950!", "All") wait(1) end end)
+    CreateButton("Give Arme", 0.6, function() print("Give Arme activé") end)
+    CreateButton("Noclip", 0.7, function() print("Noclip activé") end)
+    CreateButton("Godmode", 0.8, function() print("Godmode activé") end)
+    CreateButton("Teleport", 0.9, function() print("Teleport activé") end)
+    CreateButton("Invisibilité", 1.0, function() print("Invisibilité activée") end)
+    CreateButton("ESP", 1.1, function() print("ESP activé") end)
     
     print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
 end
