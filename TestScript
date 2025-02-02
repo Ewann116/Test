@@ -4,9 +4,15 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 
--- 📌 Création du menu hacking pro
+-- 📌 Fonction pour créer le menu
 local function createMenu()
+    -- Supprimer l'ancien menu s'il existe
+    if game:GetService("CoreGui"):FindFirstChild("ScriptDevGUI") then
+        game:GetService("CoreGui"):FindFirstChild("ScriptDevGUI"):Destroy()
+    end
+
     local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "ScriptDevGUI"
     ScreenGui.Parent = game:GetService("CoreGui")
 
     local Frame = Instance.new("Frame", ScreenGui)
@@ -38,14 +44,16 @@ local function createMenu()
         Button.MouseButton1Click:Connect(callback)
     end
 
-    -- 📌 Fly amélioré (style HD Admin)
+    -- 📌 Fly parfait (style HD Admin)
     local flying = false
     local flySpeed = 50
     local function toggleFly()
         flying = not flying
         local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
         if flying then
+            humanoid.PlatformStand = true
             local BodyGyro = Instance.new("BodyGyro", humanoidRootPart)
             local BodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
             BodyGyro.P = 9e4
@@ -56,6 +64,7 @@ local function createMenu()
                     BodyGyro.CFrame = workspace.CurrentCamera.CFrame
                     BodyVelocity.Velocity = workspace.CurrentCamera.CFrame.LookVector * flySpeed
                 else
+                    humanoid.PlatformStand = false
                     BodyGyro:Destroy()
                     BodyVelocity:Destroy()
                 end
@@ -69,12 +78,15 @@ local function createMenu()
     CreateButton("Noclip", 0.5, function() print("Noclip activé") end)
     CreateButton("Godmode", 0.6, function() print("Godmode activé") end)
     CreateButton("Teleport", 0.7, function() print("Teleport activé") end)
+    CreateButton("Invisibilité", 0.8, function() print("Invisibilité activée") end)
+    CreateButton("ESP", 0.9, function() print("ESP activé") end)
     
     print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
 end
 
 -- 📌 Gestion du reset pour rouvrir le menu
 player.CharacterAdded:Connect(function()
+    wait(1) -- Attente pour éviter les bugs
     createMenu()
 end)
 
