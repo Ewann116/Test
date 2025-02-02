@@ -1,4 +1,4 @@
--- 📌 HD Admin Ultimate Hack Menu
+-- 📌 Script Dev BY Myster78950 - Ultimate Hacking Menu
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -6,111 +6,71 @@ local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
--- 📌 Création du menu GUI avec un design hacking pro
+-- 📌 Création du menu hacking pro
 local function createMenu()
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Parent = game:GetService("CoreGui")
 
     local Frame = Instance.new("Frame", ScreenGui)
-    Frame.Size = UDim2.new(0.4, 0, 0.5, 0)
-    Frame.Position = UDim2.new(0.3, 0, 0.2, 0)
-    Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    Frame.Size = UDim2.new(0.5, 0, 0.6, 0)
+    Frame.Position = UDim2.new(0.25, 0, 0.2, 0)
+    Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     Frame.BorderSizePixel = 2
     Frame.Active = true
-    Frame.Draggable = true  -- Menu déplaçable
+    Frame.Draggable = true
 
     local Title = Instance.new("TextLabel", Frame)
     Title.Size = UDim2.new(1, 0, 0.1, 0)
-    Title.Text = "💀 Ultimate Hack Menu 💀"
+    Title.Text = "💀 Script Dev BY Myster78950 💀"
     Title.TextColor3 = Color3.fromRGB(0, 255, 0)
-    Title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Title.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     Title.Font = Enum.Font.Code
-    Title.TextSize = 22
+    Title.TextSize = 24
 
-    -- 📌 Barre de commandes type terminal
-    local CommandBox = Instance.new("TextBox", Frame)
-    CommandBox.Size = UDim2.new(1, -10, 0.1, 0)
-    CommandBox.Position = UDim2.new(0, 5, 0.85, -35)
-    CommandBox.Text = ">>> Entrez une commande"
-    CommandBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    CommandBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    CommandBox.Font = Enum.Font.Code
-    CommandBox.TextSize = 16
-    CommandBox.ClearTextOnFocus = false
+    -- 📌 Barre de recherche
+    local SearchBox = Instance.new("TextBox", Frame)
+    SearchBox.Size = UDim2.new(1, -10, 0.08, 0)
+    SearchBox.Position = UDim2.new(0, 5, 0.12, 0)
+    SearchBox.Text = "🔍 Rechercher une commande"
+    SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SearchBox.Font = Enum.Font.Code
+    SearchBox.TextSize = 18
+    SearchBox.ClearTextOnFocus = true
 
-    -- 📌 ScrollingFrame pour afficher les logs des commandes
-    local LogFrame = Instance.new("ScrollingFrame", Frame)
-    LogFrame.Size = UDim2.new(1, 0, 0.7, 0)
-    LogFrame.Position = UDim2.new(0, 0, 0.1, 0)
-    LogFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
-    LogFrame.ScrollBarThickness = 10
-    LogFrame.BackgroundTransparency = 1
+    -- 📌 ScrollingFrame pour afficher toutes les commandes
+    local CommandFrame = Instance.new("ScrollingFrame", Frame)
+    CommandFrame.Size = UDim2.new(1, 0, 0.7, 0)
+    CommandFrame.Position = UDim2.new(0, 0, 0.22, 0)
+    CommandFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+    CommandFrame.ScrollBarThickness = 10
+    CommandFrame.BackgroundTransparency = 1
 
-    local function AddLog(text)
-        local LogLabel = Instance.new("TextLabel", LogFrame)
-        LogLabel.Size = UDim2.new(1, 0, 0.1, 0)
-        LogLabel.Text = text
-        LogLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-        LogLabel.BackgroundTransparency = 1
-        LogLabel.Font = Enum.Font.Code
-        LogLabel.TextSize = 16
-        LogFrame.CanvasSize = UDim2.new(0, 0, math.max(2, LogFrame.CanvasSize.Y.Offset + 0.1), 0)
+    local function AddCommandButton(command)
+        local Button = Instance.new("TextButton", CommandFrame)
+        Button.Size = UDim2.new(1, 0, 0.08, 0)
+        Button.Text = command
+        Button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        Button.TextColor3 = Color3.fromRGB(0, 255, 0)
+        Button.Font = Enum.Font.Code
+        Button.TextSize = 18
     end
 
-    -- 📌 Commandes du menu
-    local flying = false
-    local speed = 16
-    local noclip = false
-    local flyVelocity
+    local commands = {"fly", "speed+", "speed-", "noclip", "invisible", "godmode"}
+    for _, cmd in ipairs(commands) do
+        AddCommandButton(cmd)
+    end
 
-    CommandBox.FocusLost:Connect(function()
-        local command = CommandBox.Text
-        CommandBox.Text = ">>> " .. command
-        AddLog(command)
-
-        if command == "fly" then
-            flying = not flying
-            if flying then
-                flyVelocity = Instance.new("BodyVelocity")
-                flyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-                flyVelocity.Parent = humanoidRootPart
-                RunService.RenderStepped:Connect(function()
-                    if flying then
-                        local moveDir = Vector3.new(0, 0, 0)
-                        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-                            moveDir = moveDir + (workspace.CurrentCamera.CFrame.LookVector * 5)
-                        end
-                        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-                            moveDir = moveDir + Vector3.new(0, 10, 0)
-                        end
-                        flyVelocity.Velocity = moveDir
-                    end
-                end)
-            else
-                if flyVelocity then flyVelocity:Destroy() end
+    -- 📌 Filtrage des commandes
+    SearchBox.Changed:Connect(function()
+        for _, button in ipairs(CommandFrame:GetChildren()) do
+            if button:IsA("TextButton") then
+                button.Visible = string.find(string.lower(button.Text), string.lower(SearchBox.Text)) ~= nil
             end
-        elseif command == "speed+" then
-            speed = speed + 10
-            character:FindFirstChildOfClass("Humanoid").WalkSpeed = speed
-            AddLog("Vitesse augmentée à " .. speed)
-        elseif command == "noclip" then
-            noclip = not noclip
-            RunService.Stepped:Connect(function()
-                if noclip then
-                    for _, part in pairs(character:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.CanCollide = false
-                        end
-                    end
-                end
-            end)
-            AddLog("Noclip " .. (noclip and "activé" or "désactivé"))
-        else
-            AddLog("Commande inconnue")
         end
     end)
 
-    print("✅ Ultimate Hack Menu Loaded! Use loadstring() to execute.")
+    print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
 end
 
 -- 📌 Assurer que le menu est recréé après chaque reset
