@@ -1,71 +1,124 @@
--- Créer un menu admin universel pour tout le monde
-local player = game.Players.LocalPlayer
+-- 📌 HD Admin Ultimate Hack Menu
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
--- Créer la GUI du menu
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = player.PlayerGui
+-- 📌 Création du menu GUI avec un design hacking pro
+local function createMenu()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Parent = game:GetService("CoreGui")
 
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 400)
-frame.Position = UDim2.new(0.5, -150, 0.5, -200)
-frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-frame.Parent = screenGui
+    local Frame = Instance.new("Frame", ScreenGui)
+    Frame.Size = UDim2.new(0.4, 0, 0.5, 0)
+    Frame.Position = UDim2.new(0.3, 0, 0.2, 0)
+    Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    Frame.BorderSizePixel = 2
+    Frame.Active = true
+    Frame.Draggable = true  -- Menu déplaçable
 
-local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, 0, 0, 50)
-titleLabel.Text = "Admin Menu"
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-titleLabel.TextSize = 22
-titleLabel.TextAlignment = Enum.TextAlignment.Center
-titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-titleLabel.Parent = frame
+    local Title = Instance.new("TextLabel", Frame)
+    Title.Size = UDim2.new(1, 0, 0.1, 0)
+    Title.Text = "💀 Ultimate Hack Menu 💀"
+    Title.TextColor3 = Color3.fromRGB(0, 255, 0)
+    Title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Title.Font = Enum.Font.Code
+    Title.TextSize = 22
 
--- Bouton pour activer le vol
-local flyButton = Instance.new("TextButton")
-flyButton.Size = UDim2.new(0, 280, 0, 50)
-flyButton.Position = UDim2.new(0.5, -140, 0, 80)
-flyButton.Text = "Activate Fly"
-flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-flyButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-flyButton.Parent = frame
+    -- 📌 Barre de commandes type terminal
+    local CommandBox = Instance.new("TextBox", Frame)
+    CommandBox.Size = UDim2.new(1, -10, 0.1, 0)
+    CommandBox.Position = UDim2.new(0, 5, 0.85, -35)
+    CommandBox.Text = ">>> Entrez une commande"
+    CommandBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    CommandBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CommandBox.Font = Enum.Font.Code
+    CommandBox.TextSize = 16
+    CommandBox.ClearTextOnFocus = false
 
-local flying = false
-local bodyVelocity
+    -- 📌 ScrollingFrame pour afficher les logs des commandes
+    local LogFrame = Instance.new("ScrollingFrame", Frame)
+    LogFrame.Size = UDim2.new(1, 0, 0.7, 0)
+    LogFrame.Position = UDim2.new(0, 0, 0.1, 0)
+    LogFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+    LogFrame.ScrollBarThickness = 10
+    LogFrame.BackgroundTransparency = 1
 
-flyButton.MouseButton1Click:Connect(function()
-    if not flying then
-        -- Activer le vol
-        print(player.Name .. " activated Fly!")
-        flying = true
-
-        -- Créer un BodyVelocity pour simuler le vol
-        bodyVelocity = Instance.new("BodyVelocity")
-        bodyVelocity.MaxForce = Vector3.new(400000, 400000, 400000)  -- Force nécessaire pour voler
-        bodyVelocity.Velocity = Vector3.new(0, 50, 0)  -- Vitesse de vol
-        bodyVelocity.Parent = player.Character.HumanoidRootPart
-
-        -- Maintenir le vol jusqu'à ce que le joueur arrête
-        bodyVelocity.Velocity = Vector3.new(0, 50, 0)
-    else
-        -- Désactiver le vol
-        print(player.Name .. " deactivated Fly!")
-        flying = false
-        if bodyVelocity then
-            bodyVelocity:Destroy()  -- Supprimer le BodyVelocity pour arrêter de voler
-        end
+    local function AddLog(text)
+        local LogLabel = Instance.new("TextLabel", LogFrame)
+        LogLabel.Size = UDim2.new(1, 0, 0.1, 0)
+        LogLabel.Text = text
+        LogLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+        LogLabel.BackgroundTransparency = 1
+        LogLabel.Font = Enum.Font.Code
+        LogLabel.TextSize = 16
+        LogFrame.CanvasSize = UDim2.new(0, 0, math.max(2, LogFrame.CanvasSize.Y.Offset + 0.1), 0)
     end
+
+    -- 📌 Commandes du menu
+    local flying = false
+    local speed = 16
+    local noclip = false
+    local flyVelocity
+
+    CommandBox.FocusLost:Connect(function()
+        local command = CommandBox.Text
+        CommandBox.Text = ">>> " .. command
+        AddLog(command)
+
+        if command == "fly" then
+            flying = not flying
+            if flying then
+                flyVelocity = Instance.new("BodyVelocity")
+                flyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                flyVelocity.Parent = humanoidRootPart
+                RunService.RenderStepped:Connect(function()
+                    if flying then
+                        local moveDir = Vector3.new(0, 0, 0)
+                        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                            moveDir = moveDir + (workspace.CurrentCamera.CFrame.LookVector * 5)
+                        end
+                        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                            moveDir = moveDir + Vector3.new(0, 10, 0)
+                        end
+                        flyVelocity.Velocity = moveDir
+                    end
+                end)
+            else
+                if flyVelocity then flyVelocity:Destroy() end
+            end
+        elseif command == "speed+" then
+            speed = speed + 10
+            character:FindFirstChildOfClass("Humanoid").WalkSpeed = speed
+            AddLog("Vitesse augmentée à " .. speed)
+        elseif command == "noclip" then
+            noclip = not noclip
+            RunService.Stepped:Connect(function()
+                if noclip then
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+            AddLog("Noclip " .. (noclip and "activé" or "désactivé"))
+        else
+            AddLog("Commande inconnue")
+        end
+    end)
+
+    print("✅ Ultimate Hack Menu Loaded! Use loadstring() to execute.")
+end
+
+-- 📌 Assurer que le menu est recréé après chaque reset
+player.CharacterAdded:Connect(function()
+    character = player.Character or player.CharacterAdded:Wait()
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    createMenu()
 end)
 
--- Bouton pour fermer le menu
-local closeButton = Instance.new("TextButton")
-closeButton.Size = UDim2.new(0, 280, 0, 50)
-closeButton.Position = UDim2.new(0.5, -140, 0, 150)
-closeButton.Text = "Close Menu"
-closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
-closeButton.Parent = frame
-
-closeButton.MouseButton1Click:Connect(function()
-    -- Fermer le menu admin
-    screenGui:Destroy()
-end)
+-- 📌 Créer initialement le menu
+createMenu()
