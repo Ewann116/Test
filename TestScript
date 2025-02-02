@@ -1,78 +1,82 @@
--- 📌 Script Dev BY Myster78950 - Hacking Menu
+-- 📌 Script Dev BY Myster78950 - Ultimate Hacking Menu
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 -- 📌 Création du menu hacking pro
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game:GetService("CoreGui")
+local function createMenu()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Parent = game:GetService("CoreGui")
 
-local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0.3, 0, 0.4, 0)
-Frame.Position = UDim2.new(0.35, 0, 0.3, 0)
-Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-Frame.BorderSizePixel = 2
-Frame.Active = true
-Frame.Draggable = true
+    local Frame = Instance.new("Frame", ScreenGui)
+    Frame.Size = UDim2.new(0.3, 0, 0.5, 0)
+    Frame.Position = UDim2.new(0.35, 0, 0.25, 0)
+    Frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    Frame.BorderSizePixel = 2
+    Frame.Active = true
+    Frame.Draggable = true
 
-local Title = Instance.new("TextLabel", Frame)
-Title.Size = UDim2.new(1, 0, 0.15, 0)
-Title.Text = "💀 Script Dev BY Myster78950 💀"
-Title.TextColor3 = Color3.fromRGB(0, 255, 0)
-Title.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-Title.Font = Enum.Font.Code
-Title.TextSize = 22
+    local Title = Instance.new("TextLabel", Frame)
+    Title.Size = UDim2.new(1, 0, 0.15, 0)
+    Title.Text = "💀 Script Dev BY Myster78950 💀"
+    Title.TextColor3 = Color3.fromRGB(0, 255, 0)
+    Title.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    Title.Font = Enum.Font.Code
+    Title.TextSize = 22
 
--- 📌 Ajout des boutons
-local function CreateButton(text, position, callback)
-    local Button = Instance.new("TextButton", Frame)
-    Button.Size = UDim2.new(1, -10, 0.1, 0)
-    Button.Position = UDim2.new(0, 5, position, 0)
-    Button.Text = text
-    Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Button.TextColor3 = Color3.fromRGB(0, 255, 0)
-    Button.Font = Enum.Font.Code
-    Button.TextSize = 18
-    Button.MouseButton1Click:Connect(callback)
+    -- 📌 Ajout des boutons
+    local function CreateButton(text, position, callback)
+        local Button = Instance.new("TextButton", Frame)
+        Button.Size = UDim2.new(1, -10, 0.08, 0)
+        Button.Position = UDim2.new(0, 5, position, 0)
+        Button.Text = text
+        Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        Button.TextColor3 = Color3.fromRGB(0, 255, 0)
+        Button.Font = Enum.Font.Code
+        Button.TextSize = 18
+        Button.MouseButton1Click:Connect(callback)
+    end
+
+    -- 📌 Fly amélioré (style HD Admin)
+    local flying = false
+    local flySpeed = 50
+    local function toggleFly()
+        flying = not flying
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        if flying then
+            local BodyGyro = Instance.new("BodyGyro", humanoidRootPart)
+            local BodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
+            BodyGyro.P = 9e4
+            BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+            RunService.RenderStepped:Connect(function()
+                if flying then
+                    BodyGyro.CFrame = workspace.CurrentCamera.CFrame
+                    BodyVelocity.Velocity = workspace.CurrentCamera.CFrame.LookVector * flySpeed
+                else
+                    BodyGyro:Destroy()
+                    BodyVelocity:Destroy()
+                end
+            end)
+        end
+    end
+
+    CreateButton("Fly (Toggle)", 0.2, toggleFly)
+    CreateButton("Augmenter Vitesse Fly", 0.3, function() flySpeed = flySpeed + 10 end)
+    CreateButton("Diminuer Vitesse Fly", 0.4, function() flySpeed = flySpeed - 10 end)
+    CreateButton("Noclip", 0.5, function() print("Noclip activé") end)
+    CreateButton("Godmode", 0.6, function() print("Godmode activé") end)
+    CreateButton("Teleport", 0.7, function() print("Teleport activé") end)
+    
+    print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
 end
 
--- 📌 Fly amélioré avec réglage de vitesse
-local flying = false
-local flySpeed = 50
-local flyVelocity
-
-CreateButton("Fly (Toggle)", 0.2, function()
-    flying = not flying
-    if flying then
-        flyVelocity = Instance.new("BodyVelocity")
-        flyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-        flyVelocity.Parent = humanoidRootPart
-        RunService.RenderStepped:Connect(function()
-            if flying then
-                local moveDir = Vector3.new(0, 0, 0)
-                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-                    moveDir = moveDir + (workspace.CurrentCamera.CFrame.LookVector * flySpeed)
-                end
-                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-                    moveDir = moveDir + Vector3.new(0, flySpeed, 0)
-                end
-                flyVelocity.Velocity = moveDir
-            end
-        end)
-    else
-        if flyVelocity then flyVelocity:Destroy() end
-    end
+-- 📌 Gestion du reset pour rouvrir le menu
+player.CharacterAdded:Connect(function()
+    createMenu()
 end)
 
-CreateButton("Augmenter Vitesse Fly", 0.3, function()
-    flySpeed = flySpeed + 10
-end)
-
-CreateButton("Diminuer Vitesse Fly", 0.4, function()
-    flySpeed = flySpeed - 10
-end)
-
-print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
+-- 📌 Lancer le menu au démarrage
+createMenu()
