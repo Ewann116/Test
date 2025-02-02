@@ -1,10 +1,10 @@
--- 📌 Script Dev BY Myster78950 - Ultimate Hacking Menu (Ultra Stylish)
+-- 📌 Script Dev BY Myster78950 - Ultimate Hacking Menu
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 
--- 📌 Création du menu ultra stylé
+-- 📌 Création du menu complet avec ouverture/fermeture
 local function createMenu()
     if game:GetService("CoreGui"):FindFirstChild("ScriptDevGUI") then
         game:GetService("CoreGui"):FindFirstChild("ScriptDevGUI"):Destroy()
@@ -14,28 +14,37 @@ local function createMenu()
     ScreenGui.Name = "ScriptDevGUI"
     ScreenGui.Parent = game:GetService("CoreGui")
 
-    local Frame = Instance.new("ScrollingFrame", ScreenGui)
-    Frame.Size = UDim2.new(0.35, 0, 0.6, 0)
-    Frame.Position = UDim2.new(0.325, 0, 0.2, 0)
-    Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-    Frame.BorderSizePixel = 3
-    Frame.Active = true
-    Frame.Draggable = true
-    Frame.CanvasSize = UDim2.new(0, 0, 2.5, 0)
-    Frame.ScrollBarThickness = 5
+    local MainFrame = Instance.new("Frame", ScreenGui)
+    MainFrame.Size = UDim2.new(0.4, 0, 0.6, 0)
+    MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    MainFrame.BorderSizePixel = 3
+    MainFrame.Visible = false
+    MainFrame.Active = true
+    MainFrame.Draggable = true
 
-    local Title = Instance.new("TextLabel", Frame)
-    Title.Size = UDim2.new(1, 0, 0.1, 0)
-    Title.Text = "💀 Script Dev BY Myster78950 💀"
-    Title.TextColor3 = Color3.fromRGB(0, 255, 0)
-    Title.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    Title.Font = Enum.Font.Code
-    Title.TextSize = 22
+    local ToggleButton = Instance.new("TextButton", ScreenGui)
+    ToggleButton.Size = UDim2.new(0.1, 0, 0.05, 0)
+    ToggleButton.Position = UDim2.new(0.45, 0, 0.9, 0)
+    ToggleButton.Text = "📜 Open Menu"
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    ToggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
+    ToggleButton.Font = Enum.Font.Code
+    ToggleButton.TextSize = 18
+    
+    ToggleButton.MouseButton1Click:Connect(function()
+        MainFrame.Visible = not MainFrame.Visible
+    end)
+    
+    local ScrollFrame = Instance.new("ScrollingFrame", MainFrame)
+    ScrollFrame.Size = UDim2.new(1, -10, 1, -10)
+    ScrollFrame.Position = UDim2.new(0, 5, 0, 5)
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+    ScrollFrame.ScrollBarThickness = 5
 
-    -- 📌 Fonction pour créer un bouton stylé
     local function CreateButton(text, position, callback)
-        local Button = Instance.new("TextButton", Frame)
-        Button.Size = UDim2.new(1, -10, 0.08, 0)
+        local Button = Instance.new("TextButton", ScrollFrame)
+        Button.Size = UDim2.new(1, -10, 0.1, 0)
         Button.Position = UDim2.new(0, 5, position, 0)
         Button.Text = text
         Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -47,7 +56,7 @@ local function createMenu()
         end)
     end
 
-    -- 📌 Fly indétectable
+    -- 📌 Fly indétectable avec réglage vitesse
     local flying = false
     local flySpeed = 50
     local function toggleFly()
@@ -86,7 +95,7 @@ local function createMenu()
         end
     end
 
-    -- 📌 Téléportation avec un outil
+    -- 📌 Téléportation avec clic
     local function enableClickTeleport()
         local tool = Instance.new("Tool")
         tool.RequiresHandle = false
@@ -100,16 +109,16 @@ local function createMenu()
         tool.Parent = player.Backpack
     end
 
-    -- 📌 Ajout des boutons
-    CreateButton("🔹 Fly (Toggle)", 0.2, toggleFly)
-    CreateButton("🔹 Augmenter Vitesse Fly", 0.3, function() flySpeed = flySpeed + 10 end)
-    CreateButton("🔹 Diminuer Vitesse Fly", 0.4, function() flySpeed = flySpeed - 10 end)
-    CreateButton("🔹 Téléportation Clic", 0.5, enableClickTeleport)
-    CreateButton("🔹 Noclip", 0.6, function() print("Noclip activé") end)
-    CreateButton("🔹 Godmode", 0.7, function() print("Godmode activé") end)
-    CreateButton("🔹 Invisibilité", 0.8, function() print("Invisibilité activée") end)
-    CreateButton("🔹 ESP", 0.9, function() print("ESP activé") end)
-    CreateButton("🔹 Spam Chat", 1.0, function() while true do game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest"):FireServer("HACKED BY MYSTER78950!", "All") wait(1) end end)
+    -- 📌 Ajout des boutons hacking
+    CreateButton("🔹 Fly (Toggle)", 0.1, toggleFly)
+    CreateButton("🔹 Augmenter Vitesse Fly", 0.2, function() flySpeed = flySpeed + 10 end)
+    CreateButton("🔹 Diminuer Vitesse Fly", 0.3, function() flySpeed = flySpeed - 10 end)
+    CreateButton("🔹 Téléportation Clic", 0.4, enableClickTeleport)
+    CreateButton("🔹 Noclip", 0.5, function() print("Noclip activé") end)
+    CreateButton("🔹 Godmode", 0.6, function() print("Godmode activé") end)
+    CreateButton("🔹 Invisibilité", 0.7, function() print("Invisibilité activée") end)
+    CreateButton("🔹 ESP", 0.8, function() print("ESP activé") end)
+    CreateButton("🔹 Spam Chat", 0.9, function() while true do game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents"):FindFirstChild("SayMessageRequest"):FireServer("HACKED BY MYSTER78950!", "All") wait(1) end end)
     
     print("✅ Script Dev BY Myster78950 Loaded! Use loadstring() to execute.")
 end
